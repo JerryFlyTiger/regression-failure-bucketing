@@ -1,0 +1,1973 @@
+{
+  "case_id": 1,
+  "deviation": {
+    "confidence": 0.9,
+    "detail": {
+      "target": 2147665028
+    },
+    "kind": "BRANCH_NOT_TAKEN",
+    "mclass": "BR_GE",
+    "mnemonic": "bge",
+    "source": "anchor"
+  },
+  "family": "MISMATCH",
+  "parse_errors": [],
+  "regr": {
+    "kind": "MISMATCH",
+    "matched": 29586,
+    "mismatch_count": 106747,
+    "mismatches": [
+      {
+        "ibex_idx": 31157,
+        "ibex_pc": 2147665020,
+        "ibex_rd": "a6",
+        "ibex_text": "ori\tx16,x3,903: a6:00000387",
+        "ibex_val": 903,
+        "n": 1,
+        "spike_idx": 31157,
+        "spike_pc": 2147665028,
+        "spike_rd": "s10",
+        "spike_text": "add     s10, s8, a5: s10:b38e86a1",
+        "spike_val": 3012462241
+      }
+    ],
+    "raw": [
+      "Mismatch[1]:",
+      "ibex[31157] : pc[8002c47c] ori\tx16,x3,903: a6:00000387",
+      "spike[31157] : pc[ffffffff8002c484] add     s10, s8, a5: s10:b38e86a1",
+      "[FAILED]: 29586 matched, 106747 mismatch"
+    ],
+    "test_name": null
+  },
+  "sim": {
+    "counts": {
+      "UVM_ERROR": 0,
+      "UVM_FATAL": 0,
+      "UVM_INFO": 8,
+      "UVM_WARNING": 0
+    },
+    "error_templates": {},
+    "fatals": [],
+    "first_errors": [],
+    "line_count": 103,
+    "report_ids": {
+      "RNTST": 1,
+      "TEST_DONE": 1,
+      "UVM/RELNOTES": 1,
+      "UVM/REPORT/CATCHER": 1,
+      "uvm_test_top": 2,
+      "uvm_test_top.env.data_if_slave_agent.sequencer.data_intf_seq": 1,
+      "uvm_test_top.env.instr_if_slave_agent.sequencer.instr_intf_seq": 1
+    },
+    "test_name": "core_ibex_base_test",
+    "verdict": "PASSED"
+  },
+  "trace": {
+    "anchor_hits": 2,
+    "anchor_window_anchor_pos": [
+      16,
+      16
+    ],
+    "anchor_window_violations": [
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "detail": {
+            "target": 2147665028
+          },
+          "index": 42993,
+          "kind": "BRANCH_NOT_TAKEN",
+          "mnemonic": "bge",
+          "next_pc": 2147665020,
+          "pc": 2147665016
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "detail": {
+            "target": 2147665028
+          },
+          "index": 90848,
+          "kind": "BRANCH_NOT_TAKEN",
+          "mnemonic": "bge",
+          "next_pc": 2147665020,
+          "pc": 2147665016
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    ],
+    "anchor_windows": [
+      [
+        {
+          "index": 42978,
+          "load": null,
+          "mnemonic": "c.or",
+          "operands": "x12,x10",
+          "pa": null,
+          "pc": 2147664958,
+          "reads": {
+            "x10": 31790,
+            "x12": 125
+          },
+          "size": 2,
+          "store": null,
+          "writes": {
+            "x12": 31871
+          }
+        },
+        {
+          "index": 42979,
+          "load": null,
+          "mnemonic": "sltiu",
+          "operands": "x11,x29,-546",
+          "pa": null,
+          "pc": 2147664960,
+          "reads": {
+            "x29": 152
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x11": 1
+          }
+        },
+        {
+          "index": 42980,
+          "load": null,
+          "mnemonic": "remu",
+          "operands": "x7,x4,x14",
+          "pa": null,
+          "pc": 2147664964,
+          "reads": {
+            "x14": 459,
+            "x4": 4294951619
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x7": 32
+          }
+        },
+        {
+          "index": 42981,
+          "load": null,
+          "mnemonic": "slli",
+          "operands": "x24,x8,0x1f",
+          "pa": null,
+          "pc": 2147664968,
+          "reads": {
+            "x8": 2147749849
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x24": 2147483648
+          }
+        },
+        {
+          "index": 42982,
+          "load": null,
+          "mnemonic": "lw",
+          "operands": "x24,-2(x28)",
+          "pa": 2147749516,
+          "pc": 2147664972,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 2920079360,
+          "writes": {
+            "x24": 3012413477
+          }
+        },
+        {
+          "index": 42983,
+          "load": null,
+          "mnemonic": "lh",
+          "operands": "x3,16(x28)",
+          "pa": 2147749534,
+          "pc": 2147664976,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 120,
+          "writes": {
+            "x3": 0
+          }
+        },
+        {
+          "index": 42984,
+          "load": null,
+          "mnemonic": "lui",
+          "operands": "x11,0xa3e54",
+          "pa": null,
+          "pc": 2147664980,
+          "reads": {},
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x11": 2749710336
+          }
+        },
+        {
+          "index": 42985,
+          "load": null,
+          "mnemonic": "slt",
+          "operands": "x8,x12,x23",
+          "pa": null,
+          "pc": 2147664984,
+          "reads": {
+            "x12": 31871,
+            "x23": 4294967206
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x8": 0
+          }
+        },
+        {
+          "index": 42986,
+          "load": 255,
+          "mnemonic": "sb",
+          "operands": "x31,-1(x28)",
+          "pa": 2147749517,
+          "pc": 2147664988,
+          "reads": {
+            "x28": 2147749518,
+            "x31": 4294967295
+          },
+          "size": 4,
+          "store": 4294967295,
+          "writes": {}
+        },
+        {
+          "index": 42987,
+          "load": null,
+          "mnemonic": "lbu",
+          "operands": "x12,7(x28)",
+          "pa": 2147749525,
+          "pc": 2147664992,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 32,
+          "writes": {
+            "x12": 150
+          }
+        },
+        {
+          "index": 42988,
+          "load": null,
+          "mnemonic": "slti",
+          "operands": "x8,x5,-274",
+          "pa": null,
+          "pc": 2147664996,
+          "reads": {
+            "x5": 2147777992
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x8": 1
+          }
+        },
+        {
+          "index": 42989,
+          "load": null,
+          "mnemonic": "lw",
+          "operands": "x1,6(x28)",
+          "pa": 2147749524,
+          "pc": 2147665000,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 0,
+          "writes": {
+            "x1": 2492831383
+          }
+        },
+        {
+          "index": 42990,
+          "load": null,
+          "mnemonic": "lbu",
+          "operands": "x18,-5(x28)",
+          "pa": 2147749513,
+          "pc": 2147665004,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 51237,
+          "writes": {
+            "x18": 0
+          }
+        },
+        {
+          "index": 42991,
+          "load": null,
+          "mnemonic": "slti",
+          "operands": "x29,x13,-432",
+          "pa": null,
+          "pc": 2147665008,
+          "reads": {
+            "x13": 125
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x29": 0
+          }
+        },
+        {
+          "index": 42992,
+          "load": null,
+          "mnemonic": "lbu",
+          "operands": "x4,5(x28)",
+          "pa": 2147749523,
+          "pc": 2147665012,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 2147777992,
+          "writes": {
+            "x4": 125
+          }
+        },
+        {
+          "index": 42993,
+          "load": null,
+          "mnemonic": "bge",
+          "operands": "x10,x24,8002c484",
+          "pa": null,
+          "pc": 2147665016,
+          "reads": {
+            "x10": 31790,
+            "x24": 3012413477
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x0": 0
+          }
+        },
+        {
+          "index": 42994,
+          "load": null,
+          "mnemonic": "ori",
+          "operands": "x16,x3,903",
+          "pa": null,
+          "pc": 2147665020,
+          "reads": {
+            "x3": 0
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x16": 903
+          }
+        },
+        {
+          "index": 42995,
+          "load": null,
+          "mnemonic": "add",
+          "operands": "x17,x26,x26",
+          "pa": null,
+          "pc": 2147665024,
+          "reads": {
+            "x26": 0
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x17": 0
+          }
+        },
+        {
+          "index": 42996,
+          "load": null,
+          "mnemonic": "add",
+          "operands": "x26,x24,x15",
+          "pa": null,
+          "pc": 2147665028,
+          "reads": {
+            "x15": 48764,
+            "x24": 3012413477
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x26": 3012462241
+          }
+        },
+        {
+          "index": 42997,
+          "load": null,
+          "mnemonic": "c.sub",
+          "operands": "x14,x14",
+          "pa": null,
+          "pc": 2147665032,
+          "reads": {
+            "x14": 459
+          },
+          "size": 2,
+          "store": null,
+          "writes": {
+            "x14": 0
+          }
+        },
+        {
+          "index": 42998,
+          "load": null,
+          "mnemonic": "c.beqz",
+          "operands": "x14,8002c4b6",
+          "pa": null,
+          "pc": 2147665034,
+          "reads": {
+            "x14": 0
+          },
+          "size": 2,
+          "store": null,
+          "writes": {}
+        }
+      ],
+      [
+        {
+          "index": 90833,
+          "load": null,
+          "mnemonic": "c.or",
+          "operands": "x12,x10",
+          "pa": null,
+          "pc": 2147664958,
+          "reads": {
+            "x10": 31790,
+            "x12": 125
+          },
+          "size": 2,
+          "store": null,
+          "writes": {
+            "x12": 31871
+          }
+        },
+        {
+          "index": 90834,
+          "load": null,
+          "mnemonic": "sltiu",
+          "operands": "x11,x29,-546",
+          "pa": null,
+          "pc": 2147664960,
+          "reads": {
+            "x29": 152
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x11": 1
+          }
+        },
+        {
+          "index": 90835,
+          "load": null,
+          "mnemonic": "remu",
+          "operands": "x7,x4,x14",
+          "pa": null,
+          "pc": 2147664964,
+          "reads": {
+            "x14": 459,
+            "x4": 4294951619
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x7": 32
+          }
+        },
+        {
+          "index": 90836,
+          "load": null,
+          "mnemonic": "slli",
+          "operands": "x24,x8,0x1f",
+          "pa": null,
+          "pc": 2147664968,
+          "reads": {
+            "x8": 2147749849
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x24": 2147483648
+          }
+        },
+        {
+          "index": 90837,
+          "load": null,
+          "mnemonic": "lw",
+          "operands": "x24,-2(x28)",
+          "pa": 2147749516,
+          "pc": 2147664972,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 2920079360,
+          "writes": {
+            "x24": 3012413477
+          }
+        },
+        {
+          "index": 90838,
+          "load": null,
+          "mnemonic": "lh",
+          "operands": "x3,16(x28)",
+          "pa": 2147749534,
+          "pc": 2147664976,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 120,
+          "writes": {
+            "x3": 0
+          }
+        },
+        {
+          "index": 90839,
+          "load": null,
+          "mnemonic": "lui",
+          "operands": "x11,0xa3e54",
+          "pa": null,
+          "pc": 2147664980,
+          "reads": {},
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x11": 2749710336
+          }
+        },
+        {
+          "index": 90840,
+          "load": null,
+          "mnemonic": "slt",
+          "operands": "x8,x12,x23",
+          "pa": null,
+          "pc": 2147664984,
+          "reads": {
+            "x12": 31871,
+            "x23": 4294967206
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x8": 0
+          }
+        },
+        {
+          "index": 90841,
+          "load": 255,
+          "mnemonic": "sb",
+          "operands": "x31,-1(x28)",
+          "pa": 2147749517,
+          "pc": 2147664988,
+          "reads": {
+            "x28": 2147749518,
+            "x31": 4294967295
+          },
+          "size": 4,
+          "store": 4294967295,
+          "writes": {}
+        },
+        {
+          "index": 90842,
+          "load": null,
+          "mnemonic": "lbu",
+          "operands": "x12,7(x28)",
+          "pa": 2147749525,
+          "pc": 2147664992,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 32,
+          "writes": {
+            "x12": 150
+          }
+        },
+        {
+          "index": 90843,
+          "load": null,
+          "mnemonic": "slti",
+          "operands": "x8,x5,-274",
+          "pa": null,
+          "pc": 2147664996,
+          "reads": {
+            "x5": 2147777992
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x8": 1
+          }
+        },
+        {
+          "index": 90844,
+          "load": null,
+          "mnemonic": "lw",
+          "operands": "x1,6(x28)",
+          "pa": 2147749524,
+          "pc": 2147665000,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 0,
+          "writes": {
+            "x1": 2492831383
+          }
+        },
+        {
+          "index": 90845,
+          "load": null,
+          "mnemonic": "lbu",
+          "operands": "x18,-5(x28)",
+          "pa": 2147749513,
+          "pc": 2147665004,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 51237,
+          "writes": {
+            "x18": 0
+          }
+        },
+        {
+          "index": 90846,
+          "load": null,
+          "mnemonic": "slti",
+          "operands": "x29,x13,-432",
+          "pa": null,
+          "pc": 2147665008,
+          "reads": {
+            "x13": 125
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x29": 0
+          }
+        },
+        {
+          "index": 90847,
+          "load": null,
+          "mnemonic": "lbu",
+          "operands": "x4,5(x28)",
+          "pa": 2147749523,
+          "pc": 2147665012,
+          "reads": {
+            "x28": 2147749518
+          },
+          "size": 4,
+          "store": 2147777992,
+          "writes": {
+            "x4": 125
+          }
+        },
+        {
+          "index": 90848,
+          "load": null,
+          "mnemonic": "bge",
+          "operands": "x10,x24,8002c484",
+          "pa": null,
+          "pc": 2147665016,
+          "reads": {
+            "x10": 31790,
+            "x24": 3012413477
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x0": 0
+          }
+        },
+        {
+          "index": 90849,
+          "load": null,
+          "mnemonic": "ori",
+          "operands": "x16,x3,903",
+          "pa": null,
+          "pc": 2147665020,
+          "reads": {
+            "x3": 0
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x16": 903
+          }
+        },
+        {
+          "index": 90850,
+          "load": null,
+          "mnemonic": "add",
+          "operands": "x17,x26,x26",
+          "pa": null,
+          "pc": 2147665024,
+          "reads": {
+            "x26": 0
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x17": 0
+          }
+        },
+        {
+          "index": 90851,
+          "load": null,
+          "mnemonic": "add",
+          "operands": "x26,x24,x15",
+          "pa": null,
+          "pc": 2147665028,
+          "reads": {
+            "x15": 48764,
+            "x24": 3012413477
+          },
+          "size": 4,
+          "store": null,
+          "writes": {
+            "x26": 3012462241
+          }
+        },
+        {
+          "index": 90852,
+          "load": null,
+          "mnemonic": "c.sub",
+          "operands": "x14,x14",
+          "pa": null,
+          "pc": 2147665032,
+          "reads": {
+            "x14": 459
+          },
+          "size": 2,
+          "store": null,
+          "writes": {
+            "x14": 0
+          }
+        },
+        {
+          "index": 90853,
+          "load": null,
+          "mnemonic": "c.beqz",
+          "operands": "x14,8002c4b6",
+          "pa": null,
+          "pc": 2147665034,
+          "reads": {
+            "x14": 0
+          },
+          "size": 2,
+          "store": null,
+          "writes": {}
+        }
+      ]
+    ],
+    "first_pc": 2147483776,
+    "first_violation": {
+      "detail": {
+        "target": 2147665028
+      },
+      "index": 42993,
+      "kind": "BRANCH_NOT_TAKEN",
+      "mnemonic": "bge",
+      "next_pc": 2147665020,
+      "pc": 2147665016
+    },
+    "head": [
+      {
+        "index": 0,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x0,x0,0",
+        "pa": null,
+        "pc": 2147483776,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 1,
+        "load": null,
+        "mnemonic": "c.li",
+        "operands": "x1,0",
+        "pa": null,
+        "pc": 2147483780,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {
+          "x1": 0
+        }
+      },
+      {
+        "index": 2,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x2,0x5296a",
+        "pa": null,
+        "pc": 2147483782,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x2": 1385603072
+        }
+      },
+      {
+        "index": 3,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x2,x2,-320",
+        "pa": null,
+        "pc": 2147483786,
+        "reads": {
+          "x2": 1385603072
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x2": 1385602752
+        }
+      },
+      {
+        "index": 4,
+        "load": null,
+        "mnemonic": "c.li",
+        "operands": "x3,0",
+        "pa": null,
+        "pc": 2147483790,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {
+          "x3": 0
+        }
+      },
+      {
+        "index": 5,
+        "load": null,
+        "mnemonic": "c.li",
+        "operands": "x4,0",
+        "pa": null,
+        "pc": 2147483792,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {
+          "x4": 0
+        }
+      },
+      {
+        "index": 6,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x5,0xf0825",
+        "pa": null,
+        "pc": 2147483794,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x5": 4035072000
+        }
+      },
+      {
+        "index": 7,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x5,x5,-752",
+        "pa": null,
+        "pc": 2147483798,
+        "reads": {
+          "x5": 4035072000
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x5": 4035071248
+        }
+      }
+    ],
+    "implicit_jumps": 0,
+    "implicit_targets": {},
+    "last_pc": 2147700574,
+    "mnemonic_hist": {
+      "add": 725,
+      "addi": 5581,
+      "and": 726,
+      "andi": 699,
+      "auipc": 5611,
+      "beq": 250,
+      "bge": 210,
+      "bgeu": 226,
+      "blt": 228,
+      "bltu": 241,
+      "bne": 202,
+      "c.add": 1480,
+      "c.addi": 2211,
+      "c.addi16sp": 535,
+      "c.addi4spn": 547,
+      "c.and": 762,
+      "c.andi": 748,
+      "c.beqz": 201,
+      "c.bnez": 240,
+      "c.j": 44,
+      "c.jalr": 2,
+      "c.jr": 1,
+      "c.li": 745,
+      "c.lui": 670,
+      "c.lw": 12,
+      "c.lwsp": 141,
+      "c.mv": 710,
+      "c.or": 786,
+      "c.slli": 740,
+      "c.srai": 709,
+      "c.srli": 730,
+      "c.sub": 797,
+      "c.sw": 18,
+      "c.swsp": 135,
+      "c.xor": 781,
+      "csrrs": 2,
+      "csrrw": 5,
+      "div": 727,
+      "divu": 765,
+      "ecall": 1,
+      "fence": 728,
+      "jal": 5,
+      "jalr": 9,
+      "lb": 11999,
+      "lbu": 12268,
+      "lh": 3769,
+      "lhu": 3676,
+      "lui": 1511,
+      "lw": 1586,
+      "mret": 1,
+      "mul": 765,
+      "mulh": 776,
+      "mulhsu": 787,
+      "mulhu": 812,
+      "or": 738,
+      "ori": 796,
+      "rem": 770,
+      "remu": 730,
+      "sb": 14995,
+      "sh": 4521,
+      "sll": 682,
+      "slli": 665,
+      "slt": 730,
+      "slti": 733,
+      "sltiu": 693,
+      "sltu": 773,
+      "sra": 786,
+      "srai": 761,
+      "srl": 686,
+      "srli": 753,
+      "sub": 763,
+      "sw": 1945,
+      "xor": 772,
+      "xori": 805
+    },
+    "n_instr": 102733,
+    "parse_errors": [],
+    "sig_writes": [],
+    "tail": [
+      {
+        "index": 102669,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102670,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102671,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102672,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102673,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102674,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102675,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102676,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102677,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102678,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102679,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102680,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102681,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102682,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102683,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102684,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102685,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102686,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102687,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102688,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102689,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102690,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102691,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102692,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102693,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102694,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102695,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102696,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102697,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102698,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102699,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102700,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102701,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102702,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102703,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102704,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102705,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102706,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102707,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102708,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102709,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102710,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102711,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102712,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102713,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102714,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102715,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102716,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102717,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102718,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102719,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102720,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102721,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102722,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102723,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102724,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102725,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102726,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102727,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102728,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102729,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      },
+      {
+        "index": 102730,
+        "load": 1,
+        "mnemonic": "sw",
+        "operands": "x3,162(x30)",
+        "pa": 2147717120,
+        "pc": 2147700578,
+        "reads": {
+          "x3": 1,
+          "x30": 2147716958
+        },
+        "size": 4,
+        "store": 1,
+        "writes": {}
+      },
+      {
+        "index": 102731,
+        "load": null,
+        "mnemonic": "c.j",
+        "operands": "80034f5e",
+        "pa": null,
+        "pc": 2147700582,
+        "reads": {},
+        "size": 2,
+        "store": null,
+        "writes": {}
+      },
+      {
+        "index": 102732,
+        "load": null,
+        "mnemonic": "auipc",
+        "operands": "x30,0x4",
+        "pa": null,
+        "pc": 2147700574,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x30": 2147716958
+        }
+      }
+    ],
+    "violation_samples": [
+      {
+        "detail": {
+          "target": 2147665028
+        },
+        "index": 42993,
+        "kind": "BRANCH_NOT_TAKEN",
+        "mnemonic": "bge",
+        "next_pc": 2147665020,
+        "pc": 2147665016
+      },
+      {
+        "detail": {
+          "target": 2147665322
+        },
+        "index": 43033,
+        "kind": "BRANCH_NOT_TAKEN",
+        "mnemonic": "bge",
+        "next_pc": 2147665316,
+        "pc": 2147665312
+      },
+      {
+        "detail": {
+          "target": 2147666050
+        },
+        "index": 43176,
+        "kind": "BRANCH_NOT_TAKEN",
+        "mnemonic": "bge",
+        "next_pc": 2147666008,
+        "pc": 2147666004
+      },
+      {
+        "detail": {
+          "target": 2147667006
+        },
+        "index": 43355,
+        "kind": "BRANCH_NOT_TAKEN",
+        "mnemonic": "bgeu",
+        "next_pc": 2147666992,
+        "pc": 2147666988
+      },
+      {
+        "detail": {
+          "target": 2147668040
+        },
+        "index": 43605,
+        "kind": "BRANCH_NOT_TAKEN",
+        "mnemonic": "bgeu",
+        "next_pc": 2147668026,
+        "pc": 2147668022
+      },
+      {
+        "detail": {
+          "target": 2147670130
+        },
+        "index": 44023,
+        "kind": "BRANCH_NOT_TAKEN",
+        "mnemonic": "bgeu",
+        "next_pc": 2147670114,
+        "pc": 2147670110
+      }
+    ],
+    "violations": {
+      "BRANCH_NOT_TAKEN:bge": 83,
+      "BRANCH_NOT_TAKEN:bgeu": 92
+    },
+    "x_origins": {}
+  }
+}

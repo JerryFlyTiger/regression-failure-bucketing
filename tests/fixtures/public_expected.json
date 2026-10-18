@@ -1,0 +1,252 @@
+{
+ "benchmark_set_1": {
+  "1": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_7023"
+  },
+  "2": {
+   "expected_kind": "XRET_FALLTHROUGH",
+   "expected_mnemonics": [
+    "dret"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_234"
+  },
+  "3": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_7023"
+  },
+  "4": {
+   "expected_kind": "XRET_FALLTHROUGH",
+   "expected_mnemonics": [
+    "dret"
+   ],
+   "family": "FATAL",
+   "golden_bug": "bug_234"
+  },
+  "5": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_7023"
+  },
+  "6": {
+   "expected_kind": "XRET_FALLTHROUGH",
+   "expected_mnemonics": [
+    "dret"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_234"
+  },
+  "7": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "ASSERT",
+   "golden_bug": "bug_7023"
+  }
+ },
+ "benchmark_set_2": {
+  "1": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "10": {
+   "expected_kind": "TRAP_NOT_TAKEN",
+   "expected_mnemonics": [
+    "c.ebreak",
+    "ebreak"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_304"
+  },
+  "11": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "12": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_2014"
+  },
+  "13": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "14": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_7021"
+  },
+  "15": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "16": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_304"
+  },
+  "17": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "18": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "ASSERT",
+   "golden_bug": "bug_7021"
+  },
+  "19": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "2": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "ASSERT",
+   "golden_bug": "bug_7021"
+  },
+  "20": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_2014"
+  },
+  "21": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "22": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "23": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "24": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "25": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "3": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "4": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_7021"
+  },
+  "5": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "6": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_2014"
+  },
+  "7": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  },
+  "8": {
+   "expected_kind": null,
+   "expected_mnemonics": null,
+   "family": "FATAL",
+   "golden_bug": "bug_304"
+  },
+  "9": {
+   "expected_kind": "BRANCH_NOT_TAKEN",
+   "expected_mnemonics": [
+    "bge",
+    "bgeu"
+   ],
+   "family": "MISMATCH",
+   "golden_bug": "bug_107"
+  }
+ }
+}

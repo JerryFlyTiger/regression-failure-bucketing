@@ -1,0 +1,1281 @@
+{
+  "case_id": 2,
+  "deviation": {
+    "confidence": 0.0,
+    "detail": {},
+    "kind": "NONE",
+    "mclass": null,
+    "mnemonic": null,
+    "source": "none"
+  },
+  "family": "ASSERT",
+  "parse_errors": [],
+  "regr": {
+    "kind": "TEST_FAILED",
+    "matched": null,
+    "mismatch_count": null,
+    "mismatches": [],
+    "raw": [
+      "riscv_csr_test.0 : [FAILED]"
+    ],
+    "test_name": "riscv_csr_test"
+  },
+  "sim": {
+    "counts": {
+      "UVM_ERROR": 173,
+      "UVM_FATAL": 0,
+      "UVM_INFO": 8,
+      "UVM_WARNING": 0
+    },
+    "error_templates": {
+      "u_ibex_core.cs_registers_i.IbexCsrWdataIntKnown": 119,
+      "u_ibex_core.id_stage_i.IbexBranchDecisionValid": 18,
+      "u_ibex_core.id_stage_i.IbexWbStateKnown": 18,
+      "u_ibex_core.load_store_unit_i.IbexDataOffsetKnown": 18
+    },
+    "fatals": [],
+    "first_errors": [
+      {
+        "file": "prim_assert.sv",
+        "id": "ASSERT FAILED",
+        "line": 21,
+        "raw": "UVM_ERROR /workspace/ibex/shared/rtl/prim_assert.sv(21) @ 1321000: reporter [ASSERT FAILED] [core_ibex_tb_top.dut.u_ibex_core.id_stage_i.IbexBranchDecisionValid] IbexBranchDecisionValid: branch_in_dec |-> !$isunknown(branch_decision_i) (/workspace/ibex/rtl/ibex_id_stage.sv:636)",
+        "scope": "reporter",
+        "severity": "UVM_ERROR",
+        "template": "u_ibex_core.id_stage_i.IbexBranchDecisionValid"
+      },
+      {
+        "file": "prim_assert.sv",
+        "id": "ASSERT FAILED",
+        "line": 21,
+        "raw": "UVM_ERROR /workspace/ibex/shared/rtl/prim_assert.sv(21) @ 1321000: reporter [ASSERT FAILED] [core_ibex_tb_top.dut.u_ibex_core.load_store_unit_i.IbexDataOffsetKnown] IbexDataOffsetKnown: !$isunknown(data_offset) (/workspace/ibex/rtl/ibex_load_store_unit.sv:487)",
+        "scope": "reporter",
+        "severity": "UVM_ERROR",
+        "template": "u_ibex_core.load_store_unit_i.IbexDataOffsetKnown"
+      },
+      {
+        "file": "prim_assert.sv",
+        "id": "ASSERT FAILED",
+        "line": 21,
+        "raw": "UVM_ERROR /workspace/ibex/shared/rtl/prim_assert.sv(21) @ 1323000: reporter [ASSERT FAILED] [core_ibex_tb_top.dut.u_ibex_core.id_stage_i.IbexWbStateKnown] IbexWbStateKnown: !$isunknown(id_wb_fsm_cs) (/workspace/ibex/rtl/ibex_id_stage.sv:633)",
+        "scope": "reporter",
+        "severity": "UVM_ERROR",
+        "template": "u_ibex_core.id_stage_i.IbexWbStateKnown"
+      },
+      {
+        "file": "prim_assert.sv",
+        "id": "ASSERT FAILED",
+        "line": 21,
+        "raw": "UVM_ERROR /workspace/ibex/shared/rtl/prim_assert.sv(21) @ 1393000: reporter [ASSERT FAILED] [core_ibex_tb_top.dut.u_ibex_core.id_stage_i.IbexBranchDecisionValid] IbexBranchDecisionValid: branch_in_dec |-> !$isunknown(branch_decision_i) (/workspace/ibex/rtl/ibex_id_stage.sv:636)",
+        "scope": "reporter",
+        "severity": "UVM_ERROR",
+        "template": "u_ibex_core.id_stage_i.IbexBranchDecisionValid"
+      },
+      {
+        "file": "prim_assert.sv",
+        "id": "ASSERT FAILED",
+        "line": 21,
+        "raw": "UVM_ERROR /workspace/ibex/shared/rtl/prim_assert.sv(21) @ 1393000: reporter [ASSERT FAILED] [core_ibex_tb_top.dut.u_ibex_core.load_store_unit_i.IbexDataOffsetKnown] IbexDataOffsetKnown: !$isunknown(data_offset) (/workspace/ibex/rtl/ibex_load_store_unit.sv:487)",
+        "scope": "reporter",
+        "severity": "UVM_ERROR",
+        "template": "u_ibex_core.load_store_unit_i.IbexDataOffsetKnown"
+      }
+    ],
+    "line_count": 623,
+    "report_ids": {
+      "ASSERT FAILED": 173,
+      "RNTST": 1,
+      "TEST_DONE": 1,
+      "UVM/RELNOTES": 1,
+      "UVM/REPORT/CATCHER": 1,
+      "uvm_test_top": 2,
+      "uvm_test_top.env.data_if_slave_agent.sequencer.data_intf_seq": 1,
+      "uvm_test_top.env.instr_if_slave_agent.sequencer.instr_intf_seq": 1
+    },
+    "test_name": "core_ibex_csr_test",
+    "verdict": "FAILED"
+  },
+  "trace": {
+    "anchor_hits": 0,
+    "anchor_window_anchor_pos": [],
+    "anchor_window_violations": [],
+    "anchor_windows": [],
+    "first_pc": 2147483776,
+    "first_violation": null,
+    "head": [
+      {
+        "index": 0,
+        "load": null,
+        "mnemonic": "csrrs",
+        "operands": "x1,misa,x13",
+        "pa": null,
+        "pc": 2147483776,
+        "reads": {
+          "x13": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1074794756
+        }
+      },
+      {
+        "index": 1,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0x40101",
+        "pa": null,
+        "pc": 2147483780,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1074794496
+        }
+      },
+      {
+        "index": 2,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,260",
+        "pa": null,
+        "pc": 2147483784,
+        "reads": {
+          "x13": 1074794496
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1074794756
+        }
+      },
+      {
+        "index": 3,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147483788,
+        "reads": {
+          "x1": 1074794756,
+          "x13": 1074794756
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 4,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0xa5a5a",
+        "pa": null,
+        "pc": 2147483792,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 2779095040
+        }
+      },
+      {
+        "index": 5,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,1445",
+        "pa": null,
+        "pc": 2147483796,
+        "reads": {
+          "x13": 2779095040
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 2779096485
+        }
+      },
+      {
+        "index": 6,
+        "load": null,
+        "mnemonic": "csrrc",
+        "operands": "x1,misa,x13",
+        "pa": null,
+        "pc": 2147483800,
+        "reads": {
+          "x13": 2779096485
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1074794756
+        }
+      },
+      {
+        "index": 7,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0x40101",
+        "pa": null,
+        "pc": 2147483804,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1074794496
+        }
+      }
+    ],
+    "implicit_jumps": 18,
+    "implicit_targets": {
+      "2147484028": 1,
+      "2147484048": 1,
+      "2147484068": 1,
+      "2147484088": 1,
+      "2147484108": 1,
+      "2147484128": 1,
+      "2147484148": 1,
+      "2147484168": 1,
+      "2147484188": 1,
+      "2147484200": 1,
+      "2147484212": 1,
+      "2147484224": 1,
+      "2147484236": 1,
+      "2147484248": 1,
+      "2147484260": 1,
+      "2147484272": 1,
+      "2147484284": 1,
+      "2147484296": 1
+    },
+    "last_pc": 2147486180,
+    "mnemonic_hist": {
+      "addi": 209,
+      "bne": 122,
+      "csrrc": 24,
+      "csrrci": 24,
+      "csrrs": 23,
+      "csrrsi": 24,
+      "csrrw": 21,
+      "csrrwi": 24,
+      "lui": 112,
+      "slli": 1
+    },
+    "n_instr": 584,
+    "parse_errors": [],
+    "sig_writes": [],
+    "tail": [
+      {
+        "index": 520,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,769",
+        "pa": null,
+        "pc": 2147485928,
+        "reads": {
+          "x13": 3869196288
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 3869197057
+        }
+      },
+      {
+        "index": 521,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147485932,
+        "reads": {
+          "x1": 3869197057,
+          "x13": 3869197057
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 522,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0x5a5a6",
+        "pa": null,
+        "pc": 2147485936,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1515872256
+        }
+      },
+      {
+        "index": 523,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,-1446",
+        "pa": null,
+        "pc": 2147485940,
+        "reads": {
+          "x13": 1515872256
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1515870810
+        }
+      },
+      {
+        "index": 524,
+        "load": null,
+        "mnemonic": "csrrs",
+        "operands": "x1,mtvec,x13",
+        "pa": null,
+        "pc": 2147485944,
+        "reads": {
+          "x13": 1515870810
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 3888113409
+        }
+      },
+      {
+        "index": 525,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0xe7bfe",
+        "pa": null,
+        "pc": 2147485948,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 3888111616
+        }
+      },
+      {
+        "index": 526,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,1793",
+        "pa": null,
+        "pc": 2147485952,
+        "reads": {
+          "x13": 3888111616
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 3888113409
+        }
+      },
+      {
+        "index": 527,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147485956,
+        "reads": {
+          "x1": 3888113409,
+          "x13": 3888113409
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 528,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0x93d32",
+        "pa": null,
+        "pc": 2147485960,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 2480087040
+        }
+      },
+      {
+        "index": 529,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,-1583",
+        "pa": null,
+        "pc": 2147485964,
+        "reads": {
+          "x13": 2480087040
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 2480085457
+        }
+      },
+      {
+        "index": 530,
+        "load": null,
+        "mnemonic": "csrrs",
+        "operands": "x1,mtvec,x13",
+        "pa": null,
+        "pc": 2147485968,
+        "reads": {
+          "x13": 2480085457
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 4294967041
+        }
+      },
+      {
+        "index": 531,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,-255",
+        "pa": null,
+        "pc": 2147485972,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 4294967041
+        }
+      },
+      {
+        "index": 532,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147485976,
+        "reads": {
+          "x1": 4294967041,
+          "x13": 4294967041
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 533,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0xa5a5a",
+        "pa": null,
+        "pc": 2147485980,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 2779095040
+        }
+      },
+      {
+        "index": 534,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,1445",
+        "pa": null,
+        "pc": 2147485984,
+        "reads": {
+          "x13": 2779095040
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 2779096485
+        }
+      },
+      {
+        "index": 535,
+        "load": null,
+        "mnemonic": "csrrc",
+        "operands": "x1,mtvec,x13",
+        "pa": null,
+        "pc": 2147485988,
+        "reads": {
+          "x13": 2779096485
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 4294967041
+        }
+      },
+      {
+        "index": 536,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,-255",
+        "pa": null,
+        "pc": 2147485992,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 4294967041
+        }
+      },
+      {
+        "index": 537,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147485996,
+        "reads": {
+          "x1": 4294967041,
+          "x13": 4294967041
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 538,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0x5a5a6",
+        "pa": null,
+        "pc": 2147486000,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1515872256
+        }
+      },
+      {
+        "index": 539,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,-1446",
+        "pa": null,
+        "pc": 2147486004,
+        "reads": {
+          "x13": 1515872256
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1515870810
+        }
+      },
+      {
+        "index": 540,
+        "load": null,
+        "mnemonic": "csrrc",
+        "operands": "x1,mtvec,x13",
+        "pa": null,
+        "pc": 2147486008,
+        "reads": {
+          "x13": 1515870810
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1515870721
+        }
+      },
+      {
+        "index": 541,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0x5a5a6",
+        "pa": null,
+        "pc": 2147486012,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1515872256
+        }
+      },
+      {
+        "index": 542,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,-1535",
+        "pa": null,
+        "pc": 2147486016,
+        "reads": {
+          "x13": 1515872256
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1515870721
+        }
+      },
+      {
+        "index": 543,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486020,
+        "reads": {
+          "x1": 1515870721,
+          "x13": 1515870721
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 544,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x13,0x5ca83",
+        "pa": null,
+        "pc": 2147486024,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1554526208
+        }
+      },
+      {
+        "index": 545,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x13,1723",
+        "pa": null,
+        "pc": 2147486028,
+        "reads": {
+          "x13": 1554526208
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1554527931
+        }
+      },
+      {
+        "index": 546,
+        "load": null,
+        "mnemonic": "csrrc",
+        "operands": "x1,mtvec,x13",
+        "pa": null,
+        "pc": 2147486032,
+        "reads": {
+          "x13": 1554527931
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 547,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486036,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 548,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486040,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 549,
+        "load": null,
+        "mnemonic": "csrrwi",
+        "operands": "x1,mtvec,5",
+        "pa": null,
+        "pc": 2147486044,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 550,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486048,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 551,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486052,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 552,
+        "load": null,
+        "mnemonic": "csrrwi",
+        "operands": "x1,mtvec,26",
+        "pa": null,
+        "pc": 2147486056,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 553,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486060,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 554,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486064,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 555,
+        "load": null,
+        "mnemonic": "csrrwi",
+        "operands": "x1,mtvec,20",
+        "pa": null,
+        "pc": 2147486068,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 556,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486072,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 557,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486076,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 558,
+        "load": null,
+        "mnemonic": "csrrsi",
+        "operands": "x1,mtvec,5",
+        "pa": null,
+        "pc": 2147486080,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 559,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486084,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 560,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486088,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 561,
+        "load": null,
+        "mnemonic": "csrrsi",
+        "operands": "x1,mtvec,26",
+        "pa": null,
+        "pc": 2147486092,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 562,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486096,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 563,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486100,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 564,
+        "load": null,
+        "mnemonic": "csrrsi",
+        "operands": "x1,mtvec,25",
+        "pa": null,
+        "pc": 2147486104,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 565,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486108,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 566,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486112,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 567,
+        "load": null,
+        "mnemonic": "csrrci",
+        "operands": "x1,mtvec,5",
+        "pa": null,
+        "pc": 2147486116,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 568,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486120,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 569,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486124,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 570,
+        "load": null,
+        "mnemonic": "csrrci",
+        "operands": "x1,mtvec,26",
+        "pa": null,
+        "pc": 2147486128,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 571,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486132,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 572,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486136,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 573,
+        "load": null,
+        "mnemonic": "csrrci",
+        "operands": "x1,mtvec,21",
+        "pa": null,
+        "pc": 2147486140,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 574,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486144,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 575,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486148,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 576,
+        "load": null,
+        "mnemonic": "csrrs",
+        "operands": "x1,mtvec,x0",
+        "pa": null,
+        "pc": 2147486152,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 577,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x13,x0,1",
+        "pa": null,
+        "pc": 2147486156,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x13": 1
+        }
+      },
+      {
+        "index": 578,
+        "load": null,
+        "mnemonic": "bne",
+        "operands": "x13,x1,800009f0",
+        "pa": null,
+        "pc": 2147486160,
+        "reads": {
+          "x1": 1,
+          "x13": 1
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x0": 0
+        }
+      },
+      {
+        "index": 579,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x1,x0,0",
+        "pa": null,
+        "pc": 2147486164,
+        "reads": {
+          "x0": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 0
+        }
+      },
+      {
+        "index": 580,
+        "load": null,
+        "mnemonic": "slli",
+        "operands": "x1,x1,0x8",
+        "pa": null,
+        "pc": 2147486168,
+        "reads": {
+          "x1": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 0
+        }
+      },
+      {
+        "index": 581,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x1,x1,1",
+        "pa": null,
+        "pc": 2147486172,
+        "reads": {
+          "x1": 0
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x1": 1
+        }
+      },
+      {
+        "index": 582,
+        "load": null,
+        "mnemonic": "lui",
+        "operands": "x2,0x90000",
+        "pa": null,
+        "pc": 2147486176,
+        "reads": {},
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x2": 2415919104
+        }
+      },
+      {
+        "index": 583,
+        "load": null,
+        "mnemonic": "addi",
+        "operands": "x2,x2,-4",
+        "pa": null,
+        "pc": 2147486180,
+        "reads": {
+          "x2": 2415919104
+        },
+        "size": 4,
+        "store": null,
+        "writes": {
+          "x2": 2415919100
+        }
+      }
+    ],
+    "violation_samples": [],
+    "violations": {},
+    "x_origins": {
+      "mip:.....X..": 18
+    }
+  }
+}

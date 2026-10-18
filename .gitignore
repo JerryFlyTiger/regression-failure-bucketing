@@ -1,0 +1,13 @@
+.venv
+out/
+__pycache__/
+.DS_Store
+*.pyc
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+coverage.json
+coverage.lcov
+/testcase
