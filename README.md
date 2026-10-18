@@ -137,3 +137,9 @@ tests pass.
 | `rfb/` | The bucketing program |
 | `tests/` | Unit, regression and end-to-end tests |
 | `tools/` | Scoring, benchmark runner, bug-injection and stress-test experiments, mutation-testing helper |
+
+## License
+
+The code in this repository is released under the [MIT License](LICENSE).
+The license does not cover the contest problem description or benchmark data,
+which belong to the contest organizers and are not included here.
