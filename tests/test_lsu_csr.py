@@ -243,7 +243,7 @@ def _write_lines(tmp_path, lines, name):
     return p
 
 
-_SW = "1\t1\t80000000\t0062a023\tsw\tx7,0(x5)\tx7:0x11223344 PA:0x80001000\n"
+_SW = "1\t1\t80000000\t0072a023\tsw\tx7,0(x5)\tx7:0x11223344 PA:0x80001000\n"
 _LW = "3\t3\t80000004\t0002a303\tlw\tx6,0(x5)\tPA:0x80001000 x6=0x11223345\n"
 _END = "4\t4\t80000008\t00000013\taddi\tx0,x0,0\tx0=0x00000000\n"
 
@@ -264,8 +264,8 @@ def test_malformed_line_clears_mem_shadow(tmp_path):
 
 
 def test_malformed_line_clears_csr_shadow(tmp_path):
-    w = "1\t1\t80000000\t34031273\tcsrrw\tx5,mscratch,x6\tx6:0x0000000f x5=0x00000000\n"
-    r = "3\t3\t80000004\t34002373\tcsrrs\tx7,mscratch,x0\tx7=0x0000001f\n"
+    w = "1\t1\t80000000\t340312f3\tcsrrw\tx5,mscratch,x6\tx6:0x0000000f x5=0x00000000\n"
+    r = "3\t3\t80000004\t340023f3\tcsrrs\tx7,mscratch,x0\tx7=0x0000001f\n"
     ok = parse_trace(str(_write_lines(tmp_path, [w, "2\t2\t80000004\n", r, _END],
                                       "csr_bad.log")))
     assert ok.violations == {}
@@ -284,8 +284,8 @@ def test_parse_trace_load_ext_is_first_violation(tmp_path):
 
 
 def test_parse_trace_csr_mismatch_is_first_violation(tmp_path):
-    w = "1\t1\t80000000\t34031273\tcsrrw\tx5,mscratch,x6\tx6:0x0000000f x5=0x00000000\n"
-    r = "2\t2\t80000004\t34002373\tcsrrs\tx7,mscratch,x0\tx7=0x0000001f\n"
+    w = "1\t1\t80000000\t340312f3\tcsrrw\tx5,mscratch,x6\tx6:0x0000000f x5=0x00000000\n"
+    r = "2\t2\t80000004\t340023f3\tcsrrs\tx7,mscratch,x0\tx7=0x0000001f\n"
     info = parse_trace(str(_write_lines(tmp_path, [w, r, _END.replace("4\t4", "3\t3")], "csr.log")))
     assert info.violations == {"CSR_MISMATCH:csrrs": 1}
     assert info.first_violation.kind == "CSR_MISMATCH"
@@ -295,9 +295,9 @@ def test_parse_trace_csr_mismatch_is_first_violation(tmp_path):
 def test_parse_trace_passes_next_pc_to_observe(tmp_path):
     # mepc written, then a trap-like pc jump after an addi: mepc is forgotten,
     # so the differing read-back later is not reported.
-    w = "1\t1\t80000000\t34031273\tcsrrw\tx5,mepc,x6\tx6:0x80000010 x5=0x00000000\n"
+    w = "1\t1\t80000000\t341312f3\tcsrrw\tx5,mepc,x6\tx6:0x80000010 x5=0x00000000\n"
     a = "2\t2\t80000004\t00000013\taddi\tx0,x0,0\tx0=0x00000000\n"
-    r = "3\t3\t80000100\t34002373\tcsrrs\tx7,mepc,x0\tx7=0x80000040\n"
+    r = "3\t3\t80000100\t341023f3\tcsrrs\tx7,mepc,x0\tx7=0x80000040\n"
     end = "4\t4\t80000104\t00000013\taddi\tx0,x0,0\tx0=0x00000000\n"
     info = parse_trace(str(_write_lines(tmp_path, [w, a, r, end], "trap.log")))
     assert info.violations == {}
@@ -471,11 +471,16 @@ def test_csrrw_rd_x0_still_updates_shadow():
     assert r.csr_r("mscratch", 0x22).kind == "CSR_MISMATCH"
 
 
-def test_mstatus_never_checked():
+def test_mstatus_is_checked_as_mstatus_mismatch_not_csr_mismatch():
     r = _Run()
     r.csr_w("mstatus", 0x1888)
-    assert r.csr_r("mstatus", 0x0) is None
-    assert r.csr_r("mstatus", 0x1888) is None
+    v = r.csr_r("mstatus", 0x0)
+    assert v is not None
+    assert v.kind == "MSTATUS_MISMATCH" and v.kind != "CSR_MISMATCH"
+    assert v.detail["field"] == "MIE+MPIE+MPP"
+    r2 = _Run()
+    r2.csr_w("mstatus", 0x1888)
+    assert r2.csr_r("mstatus", 0x1888) is None
 
 
 def test_csr_mismatch_skipped_when_followed_by_flow_break():
@@ -634,7 +639,7 @@ def test_load_with_unknown_pa_keeps_memory_shadow():  # F7 reverse
 # --- public traces: the new kinds stay at zero --------------------------------
 
 _PUBLIC = Path(__file__).resolve().parents[1] / "testcase/2026_08_20_samples/problem"
-_NEW_KINDS = ("LOAD_EXT", "MEM_MISMATCH", "CSR_MISMATCH")
+_NEW_KINDS = ("LOAD_EXT", "MEM_MISMATCH", "CSR_MISMATCH", "REG_ADDR_RD", "REG_ADDR_RS")
 
 
 def test_public_traces_have_no_new_kind_violations():

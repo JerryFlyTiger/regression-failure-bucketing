@@ -135,7 +135,13 @@ def viol_group(kind: str, mn: str, detail: dict | None = None) -> str:
     MEM_MISMATCH of the trace is next to a later sub-word store, set by
     parse_trace) -> "MEMREAD_ST"; CSR_MISMATCH with detail["op"] (the read
     is explained by one write op behaving as another, ``_csr_src_op``) ->
-    "CSR@" + op, before the polarity."""
+    "CSR@" + op, before the polarity.
+
+    REG_ADDR_RD / REG_ADDR_RS: compressed mnemonics group per mnemonic
+    ("RA_RD:<mn>" / "RA_RS:<mn>"); 32-bit ones group by detail["field"]
+    ("RA_RS1:I", "RA_RS2:I", "RA_RS:I", "RA_RD:I").  A missing field
+    defaults by kind (RD -> "RA_RD:I", RS -> "RA_RS:I"); in the real pipeline
+    ``_reg_addr`` always supplies the field, so only unit tests see it."""
     if kind == "LOAD_EXT":
         return "LD_SEXT" if mn in ("lb", "lh") else "LD_ZEXT"
     if kind == "MEM_MISMATCH":
@@ -145,11 +151,19 @@ def viol_group(kind: str, mn: str, detail: dict | None = None) -> str:
         if d.get("op"):
             return "CSR@" + d["op"]
         return "CSR" + (d.get("pol") or "~")
+    if kind == "MSTATUS_MISMATCH":
+        return "MST:" + ((detail or {}).get("field") or "?")
     if kind in _TRAP_KINDS_SET:
         t = (detail or {}).get("trap")
         if t and kind == "TRAP_MEPC":
             t = "irq" if t == "irq" else "sync"
         return f"{kind}:{t}" if t else kind
+    if kind in ("REG_ADDR_RD", "REG_ADDR_RS"):
+        # Compressed expansions are one ibex_compressed_decoder line per
+        # mnemonic; the 32-bit decoder shares its rd/rs1/rs2 fields.
+        if mn.startswith("c."):
+            return ("RA_RD:" if kind == "REG_ADDR_RD" else "RA_RS:") + mn
+        return "RA_" + ((detail or {}).get("field") or ("RD" if kind == "REG_ADDR_RD" else "RS")) + ":I"
     if kind == "READ_MISMATCH":
         if detail and detail.get("fwd"):
             return "REGREAD_FWD"
@@ -216,6 +230,19 @@ class ScanContext:
     xmepc: int | None = None
     priv: str | None = "M"
     mpp: int | None = None
+    # 2026-10-20 mstatus model (``_observe_mstatus``): value, known-bit mask,
+    # the event that last set each field ("csr" / "trap" / "mret"), whether an
+    # NMI handler is active (its mret restores MPIE/MPP from mstack), and
+    # whether the last control-flow break landed somewhere unrecognised.
+    mst: int = 0
+    mst_known: int = 0
+    mst_src: dict[str, str] = field(default_factory=dict)
+    mst_nmi: bool = False
+    mst_unk: bool = False
+    # ``ctx.priv`` may be stale (an unrecognised landing / unknown mtvec, e.g.
+    # a reset out of U mode): a trap entry then treats MPP as unknown, until an
+    # mret whose MPP the model knew. An ecall's mcause prediction also reads it (R2-6).
+    mst_priv_unk: bool = False
 
 
 def observe(ctx: ScanContext, instr, next_pc: int | None = None) -> None:
@@ -264,8 +291,12 @@ def observe(ctx: ScanContext, instr, next_pc: int | None = None) -> None:
     if (mn in _ST_W or mn in _LD_W or mn in _CSR_OP
             or (next_pc is not None and next_pc != (instr.pc + instr.size) & _MASK32)):
         _observe_lsu_csr(ctx, instr, next_pc, brk)
-    if mn in _CSR_OP or mn == "mret" or (next_pc is not None and next_pc != (instr.pc + instr.size) & _MASK32):
-        _observe_trap(ctx, instr, next_pc, brk)
+    if mn in _CSR_OP or mn in ("mret", "dret") or (next_pc is not None and next_pc != (instr.pc + instr.size) & _MASK32):
+        # an NMI's mret restores MPP from mstack, not 0; read the flag before
+        # _observe_mstatus clears it
+        nmi_ret = mn == "mret" and ctx.mst_nmi
+        _observe_mstatus(ctx, instr, next_pc, brk)  # before _observe_trap (needs old priv/mpp/xmepc)
+        _observe_trap(ctx, instr, next_pc, brk, nmi_ret=nmi_ret)
 
 
 _MTVEC_NAMES = ("mtvec", "0x305")
@@ -1221,7 +1252,7 @@ _TRAP_KINDS_SET = frozenset(_TRAP_KINDS.values())
 _TRAP_CSR_NAMES = {"mcause": "mcause", "0x342": "mcause", "mepc": "mepc", "0x341": "mepc",
                    "mtval": "mtval", "0x343": "mtval"}
 
-def _observe_trap(ctx: ScanContext, instr, next_pc, brk) -> None:
+def _observe_trap(ctx: ScanContext, instr, next_pc, brk, *, nmi_ret: bool = False) -> None:
     """Predict mcause/mepc/mtval at a trap entry (Ibex mtvec is vectored: sync
     exceptions enter base, interrupt k enters base + 4k) and track the mepc an
     mret must return to."""
@@ -1229,7 +1260,7 @@ def _observe_trap(ctx: ScanContext, instr, next_pc, brk) -> None:
     xmepc_before = ctx.xmepc  # an mret's expected return address, before this instruction
     if mn == "mret":
         ctx.priv = {0: "U", 3: "M"}.get(ctx.mpp) if ctx.mpp is not None else None
-        ctx.mpp = 0
+        ctx.mpp = None if nmi_ret else 0
     if mn in _CSR_OP:
         ops = _split_operands(instr.operands)
         if len(ops) == 3 and ops[1] in ("mstatus", "0x300"):
@@ -1280,7 +1311,9 @@ def _observe_trap(ctx: ScanContext, instr, next_pc, brk) -> None:
     if next_pc == base:
         epcs, tval = (instr.pc,), None
         if mn == "ecall":
-            trap, cause, tval = "ecall", {"U": (8,), "M": (11,)}.get(ctx.priv, (8, 11)), 0
+            # a stale priv (mst_priv_unk) cannot pick the ecall cause
+            trap, cause, tval = ("ecall", (8, 11) if ctx.mst_priv_unk
+                                 else {"U": (8,), "M": (11,)}.get(ctx.priv, (8, 11)), 0)
         elif mn in ("ebreak", "c.ebreak"):
             trap, cause = "ebreak", (3,)
         elif cls == "LOAD":
@@ -1386,13 +1419,152 @@ def _xret_target(cur, next_pc, ctx: ScanContext) -> Violation | None:
                      detail={"expected": ctx.xmepc, "actual": next_pc}, pc=cur.pc, next_pc=next_pc)
 
 
+_XN = tuple("x%d" % i for i in range(32))
+_XN_SET = tuple(frozenset((n,)) for n in _XN)
+# Compressed: mnemonic -> (quadrant, funct3, src fields, dst field).  Field
+# codes: "a" = [11:7], "b" = [6:2], "p" = rs1' [9:7], "q" = rs2' [4:2],
+# or a fixed register number (x2 = sp, x1 = ra, x0 for c.mv's expansion).
+_RA_C = {
+    "c.addi4spn": (0, 0, (2,), "q"), "c.lw": (0, 2, ("p",), "q"), "c.sw": (0, 6, ("p", "q"), None),
+    "c.addi": (1, 0, ("a",), "a"), "c.jal": (1, 1, (), 1), "c.li": (1, 2, (), "a"),
+    "c.lui": (1, 3, (), "a"), "c.addi16sp": (1, 3, (2,), 2),
+    "c.srli": (1, 4, ("p",), "p"), "c.srai": (1, 4, ("p",), "p"), "c.andi": (1, 4, ("p",), "p"),
+    "c.sub": (1, 4, ("p", "q"), "p"), "c.xor": (1, 4, ("p", "q"), "p"),
+    "c.or": (1, 4, ("p", "q"), "p"), "c.and": (1, 4, ("p", "q"), "p"),
+    "c.j": (1, 5, (), None), "c.beqz": (1, 6, ("p",), None), "c.bnez": (1, 7, ("p",), None),
+    "c.slli": (2, 0, ("a",), "a"), "c.lwsp": (2, 2, (2,), "a"), "c.jr": (2, 4, ("a",), None),
+    "c.mv": (2, 4, (0, "b"), "a"), "c.jalr": (2, 4, ("a",), 1), "c.add": (2, 4, ("a", "b"), "a"),
+    "c.swsp": (2, 6, (2, "b"), None),
+}
+# 32-bit: mnemonic -> (opcode, rs1 used, rs2 used, rd used).  The fields are
+# shared by every opcode (ibex_decoder instr_rs1/rs2/rd), so the group names
+# the field, not the mnemonic.
+_RA_32: dict[str, tuple[int, bool, bool, bool]] = {}
+for _mn, _cls in MCLASS.items():
+    if _mn.startswith("c."):
+        continue
+    if _cls in ("BR_BEQ", "BR_BNE", "BR_LT", "BR_GE"):
+        _RA_32[_mn] = (0x63, True, True, False)
+    elif _cls == "LOAD":
+        _RA_32[_mn] = (0x03, True, False, True)
+    elif _cls == "STORE":
+        _RA_32[_mn] = (0x23, True, True, False)
+    elif _cls == "CSR":
+        _RA_32[_mn] = (0x73, not _mn.endswith("i"), False, True)
+    elif _cls in ("ADDSUB", "LOGIC", "SHIFT", "SLT", "MUL", "DIV"):
+        if _mn in ("lui", "auipc"):
+            _RA_32[_mn] = (0x37 if _mn == "lui" else 0x17, False, False, True)
+        elif _mn in ("addi", "andi", "ori", "xori", "slli", "srli", "srai", "slti", "sltiu"):
+            _RA_32[_mn] = (0x13, True, False, True)
+        else:
+            _RA_32[_mn] = (0x33, True, True, True)
+_RA_32["jal"] = (0x6F, False, False, True)
+_RA_32["jalr"] = (0x67, True, False, True)
+_RA_NONE = (None, None, None, None, ())
+_ra_cache: dict = {}
+_RA_CAP = 20000  # entries per cache dict
+# Entries with the same content share one tuple (decoded entries repeat a lot
+# across Insn strings; without this the two caches doubled the peak RSS).
+_ra_pool: dict = {}
+# REG_ADDR on/off: tests/test_parse_trace_legacy_equiv.py turns it off (the
+# frozen legacy oracle has no Insn column, see that file).
+_RA_ON = True
+
+
+def _ra_decode(mn: str, v: int | None, compressed: bool):
+    ent = None
+    if v is not None and compressed:
+        c = _RA_C.get(mn)
+        if c is not None and (v & 3) == c[0] and ((v >> 13) & 7) == c[1]:
+            f = {"a": (v >> 7) & 31, "b": (v >> 2) & 31, "p": 8 + ((v >> 7) & 7), "q": 8 + ((v >> 2) & 7)}
+            srcs = frozenset(_XN[f.get(x, x)] for x in c[2])
+            d = c[3]
+            dst = None if d is None else _XN[f.get(d, d)]
+            ent = (mn, srcs, frozenset(("x0", dst)) if dst else _XN_SET[0], dst, ())
+    elif v is not None:
+        e = _RA_32.get(mn)
+        if e is not None and (v & 0x7F) == e[0] and (e[0] != 0x73 or (v >> 12) & 3):
+            r1 = _XN[(v >> 15) & 31] if e[1] else None
+            r2 = _XN[(v >> 20) & 31] if e[2] else None
+            dst = _XN[(v >> 7) & 31] if e[3] else None
+            fields = tuple(fr for fr in (("RS1", r1), ("RS2", r2)) if fr[1] is not None)
+            ent = (mn, frozenset(fr[1] for fr in fields), frozenset(("x0", dst)) if dst else _XN_SET[0],
+                   dst, fields)
+    if ent is None:
+        ent = (mn,) + _RA_NONE[1:]
+    pooled = _ra_pool.get(ent)
+    if pooled is None:
+        if len(_ra_pool) >= _RA_CAP:
+            _ra_pool.clear()
+        _ra_pool[ent] = pooled = ent
+    return pooled
+
+
+_ra_fields: dict = {}
+
+
+def _ra_entry(mn: str, insn: str):
+    """Cache entry for one Insn string: (mnemonic, allowed reads, allowed
+    writes, dst, src fields).  The sets are None when the bits do not decode
+    to the printed mnemonic (then nothing is checked).  Random tests rarely
+    repeat an Insn, so a miss first looks up the register/opcode bits only
+    (immediates masked off) before decoding."""
+    try:
+        v = int(insn, 16) if insn else None
+    except ValueError:
+        v = None
+    compressed = len(insn) <= 4
+    key = (mn, compressed, None if v is None else (v if compressed else v & 0x01FFFFFF))
+    ent = _ra_fields.get(key)
+    if ent is None:
+        ent = _ra_decode(mn, v, compressed)
+        if len(_ra_fields) >= _RA_CAP:
+            _ra_fields.clear()
+        _ra_fields[key] = ent
+    if len(_ra_cache) >= _RA_CAP:
+        _ra_cache.clear()
+    _ra_cache[insn] = ent
+    return ent
+
+
+def _reg_addr(cur, next_pc, ent) -> Violation | None:
+    """REG_ADDR (docs/ARCHITECTURE.md 4.3), called only after the inline
+    screen in ``check_safe`` found a printed register outside ``ent``.
+    ibex_tracer prints the register numbers (operand text and the xN:/xN=
+    tokens) from rvfi_rs1/rs2/rd_addr, i.e. the registers the core used,
+    but the Insn column is rvfi_insn.  A printed register that is not a
+    field encoded in the Insn bits means the decoder picked a different
+    register.  A printed x0 write is never checked (branches print x0=, a
+    faulting load prints rd x0); a printed x0 read is (only c.mv encodes one)."""
+    _mn, srcs, _aw, dst, fields = ent
+    for r in cur.writes:
+        if r != "x0" and r != dst:
+            return Violation(index=cur.index, kind="REG_ADDR_RD", mnemonic=cur.mnemonic,
+                             detail={"reg": r, "expected": dst, "field": "RD"},
+                             pc=cur.pc, next_pc=next_pc)
+    reads = cur.reads
+    r = next(r for r in reads if r not in srcs)
+    miss = [f for f, e in fields if e not in reads]
+    if fields and not miss:
+        # 32-bit: rs1 and rs2 encode the same register, so the faulty field
+        # cannot be named; stay silent (another instruction of the same bug
+        # names it) rather than emit a field-less RS group.
+        return None
+    return Violation(index=cur.index, kind="REG_ADDR_RS", mnemonic=cur.mnemonic,
+                     detail={"reg": r, "field": miss[0] if len(miss) == 1 else "RS"},
+                     pc=cur.pc, next_pc=next_pc)
+
+
 def check_safe(prev, cur, next_pc, ctx: ScanContext) -> tuple[Violation | None, str | None]:
     """Like ``check``, but never raises on malformed operand tokens.
 
     Catches ``ValueError``/``IndexError`` from immediate/target parsing and
     returns ``(None, "<exception class>: <message>")`` instead. On success
     returns ``(violation_or_none, None)``. When ``check()`` finds no violation,
-    ``_read_mismatch`` runs next (``check()`` itself never reports READ_MISMATCH),
+    REG_ADDR runs first (``_reg_addr``; skipped when ``_flow_break`` says a
+    trap or xret followed the instruction); a REG_ADDR hit stops the later
+    checks. Otherwise ``_trap_csr`` (CSR ops) and ``_xret_target`` (mret) run,
+    then ``_read_mismatch`` (``check()`` itself never reports READ_MISMATCH),
     then ``_lsu_csr_mismatch`` (MEM_MISMATCH / CSR_MISMATCH against ``ctx.mem`` /
     ``ctx.csr``; LOAD_EXT comes from ``check()`` itself). A CSR read also runs
     ``_trap_csr`` (TRAP_* against ``ctx.trap_pred`` set by ``_observe_trap``) and
@@ -1400,8 +1572,21 @@ def check_safe(prev, cur, next_pc, ctx: ScanContext) -> tuple[Violation | None, 
     """
     try:
         v = check(prev, cur, next_pc, ctx)
+        if v is None and _RA_ON:
+            ent = _ra_cache.get(cur.insn)
+            if ent is None or ent[0] != cur.mnemonic:
+                ent = _ra_entry(cur.mnemonic, cur.insn)
+            if ent[1] is not None and not (cur.reads.keys() <= ent[1] and cur.writes.keys() <= ent[2]):
+                # An instruction followed by a trap entry may have been
+                # illegal; Ibex can then zero rvfi_rs*_addr and the tracer
+                # prints x0 reads.  Do not judge it (flow break = next_pc is
+                # not the fallthrough / branch or jump target).
+                if not _flow_break(cur, next_pc):
+                    v = _reg_addr(cur, next_pc, ent)
         if v is None and cur.mnemonic in _CSR_OP:
             v = _trap_csr(cur, next_pc, ctx)
+            if v is None:
+                v = _mstatus_check(cur, next_pc, ctx)
         if v is None and cur.mnemonic == "mret":
             v = _xret_target(cur, next_pc, ctx)
         if v is None:
@@ -1420,3 +1605,210 @@ def check_safe(prev, cur, next_pc, ctx: ScanContext) -> tuple[Violation | None, 
         return v, None
     except (ValueError, IndexError) as exc:
         return None, f"{type(exc).__name__}: {exc}"
+
+
+# 2026-10-20 mstatus 追蹤 (PLAN.md 4c): model of the readable Ibex mstatus
+# fields, checked against every mstatus read.  Field semantics are the
+# privileged spec plus the architect's recollection of ibex_cs_registers.sv
+# (not verified against RTL); every transition used here was confirmed on the
+# public traces (1,244 reads, all equal), except MPP legalisation (MPP becomes
+# unknown) and the NMI mstack restore (MPIE/MPP become unknown).
+_MST_NAMES = ("mstatus", "0x300")
+# Readable bits: MIE 3, MPIE 7, MPP 12:11, MPRV 17, TW 21; all others read 0.
+_MST_R = 0x00221888
+_MST_MIE, _MST_MPIE, _MST_MPP, _MST_MPRV = 0x8, 0x80, 0x1800, 0x20000
+_MST_FIELDS = (("MIE", _MST_MIE), ("MPIE", _MST_MPIE), ("MPP", _MST_MPP),
+               ("MPRV", _MST_MPRV), ("TW", 0x200000))
+_MST_NMI_K = 31
+
+
+def _mst_legal(v: int, k: int) -> tuple[int, int]:
+    """Legalise a written value ``v`` with known mask ``k``.  A written MPP of
+    01/10 is converted to a supported mode; which one is not verified, so MPP
+    becomes unknown.  Bits outside ``_MST_R`` read 0 and are known."""
+    v &= _MST_R
+    if k & _MST_MPP != _MST_MPP or (v >> 11) & 3 in (1, 2):
+        k &= ~_MST_MPP
+    return v, (k | ~_MST_R) & _MASK32
+
+
+def _mst_set(ctx: ScanContext, bits: int, val: int, src: str) -> None:
+    ctx.mst = (ctx.mst & ~bits) | (val & bits)
+    ctx.mst_known |= bits
+    for name, m in _MST_FIELDS:
+        if bits & m:
+            ctx.mst_src[name] = src
+
+
+def _mst_trap(ctx: ScanContext, priv: str | None) -> None:
+    """Trap entry: MPIE <- MIE, MIE <- 0, MPP <- the privilege trapped from."""
+    if ctx.mst_priv_unk:
+        priv = None
+    if ctx.mst_known & _MST_MIE:
+        _mst_set(ctx, _MST_MPIE, _MST_MPIE if ctx.mst & _MST_MIE else 0, "trap")
+    else:
+        ctx.mst_known &= ~_MST_MPIE
+    _mst_set(ctx, _MST_MIE, 0, "trap")
+    m = {"M": _MST_MPP, "U": 0}.get(priv)
+    if m is None:
+        ctx.mst_known &= ~_MST_MPP
+    else:
+        _mst_set(ctx, _MST_MPP, m, "trap")
+
+
+def _mst_note_nmi(ctx: ScanContext, slot: bool, off: int) -> None:
+    """Landing in the NMI slot (31): the handler's mret restores from mstack."""
+    if slot and off // 4 == _MST_NMI_K:
+        ctx.mst_nmi = True
+
+
+def _mst_after_csr(instr, ctx: ScanContext) -> tuple[int, int]:
+    """(value, known mask) of mstatus after a retired CSR op on mstatus: the
+    printed read value (if any) re-syncs every bit, then the write applies."""
+    v, k = ctx.mst, ctx.mst_known
+    ops = _split_operands(instr.operands)
+    rd, src = ops[0], ops[2]
+    rv = instr.writes.get(rd) if rd != "x0" else None
+    if rv is not None:
+        v, k = rv, _MASK32
+    sv = _csr_operand(instr, src)
+    op = _CSR_OP[instr.mnemonic]
+    if op == "W":
+        return (v, 0) if sv is None else _mst_legal(sv, _MASK32)
+    if sv is None:
+        return v, 0
+    if sv == 0:
+        return v, k
+    if op == "S":
+        return _mst_legal((v | sv) & _MASK32, k | sv)
+    return _mst_legal(v & ~sv & _MASK32, k | sv)
+
+
+def _mstatus_check(cur, next_pc, ctx: ScanContext) -> Violation | None:
+    """MSTATUS_MISMATCH: an mstatus read differs from the model on a known
+    bit.  Skipped when the read is followed by a control-flow break (it may
+    have trapped).  detail["field"] names the differing field(s)."""
+    if not ctx.mst_known:
+        return None
+    if next_pc is not None and next_pc != (cur.pc + cur.size) & _MASK32:
+        return None
+    ops = _split_operands(cur.operands)
+    if len(ops) != 3 or ops[1] not in _MST_NAMES or ops[0] == "x0":
+        return None
+    rv = cur.writes.get(ops[0])
+    if rv is None:
+        return None
+    k, e = ctx.mst_known, ctx.mst
+    diff = (e ^ rv) & k
+    if not diff:
+        return None
+    fields = [n for n, m in _MST_FIELDS if diff & m] or ["OTHER"]
+    return Violation(index=cur.index, kind="MSTATUS_MISMATCH", mnemonic=cur.mnemonic,
+                     detail={"field": "+".join(fields), "expected": e & k, "actual": rv,
+                             "src": ctx.mst_src.get(fields[0]) if len(fields) == 1 else None},
+                     pc=cur.pc, next_pc=next_pc)
+
+
+def _observe_mstatus(ctx: ScanContext, instr, next_pc, brk: bool) -> None:
+    """Update the mstatus model (``ctx.mst`` / ``ctx.mst_known``).  Must run
+    before ``_observe_trap``: it needs the pre-instruction ``priv`` / ``mpp``
+    / ``xmepc``.  Landings follow ``_observe_trap``: base = sync exception,
+    base + 4k (k in ``_IRQ_KS``) = interrupt, anything else = debug entry or
+    an unprinted instruction, which forgets the whole model."""
+    mn = instr.mnemonic
+    is_csr = False
+    if mn in _CSR_OP:
+        ops = _split_operands(instr.operands)
+        is_csr = len(ops) == 3 and ops[1] in _MST_NAMES
+    is_mret = mn == "mret"
+    if not brk and not is_mret:
+        if mn == "dret":
+            ctx.mst_known &= ~_MST_MPRV  # dret that falls through: only MPRV may change
+        elif is_csr:
+            v, k = _mst_after_csr(instr, ctx)
+            changed = ((v ^ ctx.mst) | (k ^ ctx.mst_known)) & k
+            ctx.mst, ctx.mst_known = v, k
+            for name, m in _MST_FIELDS:
+                if changed & m:
+                    ctx.mst_src[name] = "csr"
+        return
+    base = ctx.mtvec_base
+    if brk and base is None:
+        ctx.mst_known = 0
+        ctx.mst_unk = True
+        ctx.mst_priv_unk = True
+        return
+    if brk:
+        off = (next_pc - base) & _MASK32
+        at_base = next_pc == base
+        slot = not at_base and off % 4 == 0 and off // 4 in _IRQ_KS
+    else:
+        # mret falling through / with an unknown next pc: an ordinary mret.
+        off, at_base, slot = 0, False, False
+    if is_mret:
+        ret_to_mepc = brk and next_pc == ctx.xmepc
+        if ctx.mst_unk or (at_base and not ret_to_mepc):
+            # mret reached through an unrecognised landing (not a modelled
+            # handler), or an mret that may itself have been illegal: only a
+            # following trap entry's MIE=0 is certain.
+            ctx.mst_unk = False
+            ctx.mst_known = 0
+            if (at_base or slot) and not ret_to_mepc:
+                _mst_set(ctx, _MST_MIE, 0, "trap")
+                _mst_note_nmi(ctx, slot, off)
+            return
+        # MPP known to the model (and not an NMI restore): the privilege
+        # after this mret is known, so ``priv`` is trustworthy again.
+        if ctx.mst_known & _MST_MPP and not ctx.mst_nmi and ctx.mpp is not None:
+            ctx.mst_priv_unk = False
+        # MIE <- MPIE, MPIE <- 1, MPP <- U, MPRV <- 0 unless MPP was M.
+        if ctx.mst_known & _MST_MPIE:
+            _mst_set(ctx, _MST_MIE, _MST_MIE if ctx.mst & _MST_MPIE else 0, "mret")
+        else:
+            ctx.mst_known &= ~_MST_MIE
+        if ctx.mst_known & _MST_MPP:
+            if ctx.mst & _MST_MPP != _MST_MPP:
+                _mst_set(ctx, _MST_MPRV, 0, "mret")
+        else:
+            ctx.mst_known &= ~_MST_MPRV
+        new_priv = {0: "U", 3: "M"}.get(ctx.mpp) if ctx.mpp is not None else None
+        if ctx.mst_nmi:
+            # Return from an NMI handler: Ibex restores MPIE/MPP from mstack.
+            ctx.mst_known &= ~(_MST_MPIE | _MST_MPP)
+            ctx.mst_nmi = False
+        else:
+            _mst_set(ctx, _MST_MPIE, _MST_MPIE, "mret")
+            _mst_set(ctx, _MST_MPP, 0, "mret")
+        if slot and not ret_to_mepc:
+            _mst_trap(ctx, new_priv)
+            _mst_note_nmi(ctx, slot, off)
+        return
+    if mn == "dret":
+        # Debug may have changed the privilege (MPRV is cleared when
+        # dcsr.prv != M).  A landing on base / a slot (an irq right after
+        # dret, or a debug halt at a vector entry already taken) leaves MIE 0.
+        ctx.mst_known &= ~_MST_MPRV
+        if (at_base or slot) and next_pc != ctx.xmepc:
+            if at_base:
+                ctx.mst_known = 0
+            else:
+                ctx.mst_known &= ~(_MST_MPIE | _MST_MPP)
+            _mst_set(ctx, _MST_MIE, 0, "trap")
+            ctx.mst_unk = False
+            _mst_note_nmi(ctx, slot, off)
+        return
+    if not (at_base or slot):
+        ctx.mst_known = 0
+        ctx.mst_unk = True
+        ctx.mst_priv_unk = True
+        return
+    ctx.mst_unk = False
+    if is_csr:
+        if at_base:
+            # The CSR op may itself have trapped (illegal): no write.
+            ctx.mst_known = 0
+        else:
+            # An interrupt is taken after the CSR op retired.
+            ctx.mst, ctx.mst_known = _mst_after_csr(instr, ctx)
+    _mst_trap(ctx, ctx.priv)
+    _mst_note_nmi(ctx, slot, off)

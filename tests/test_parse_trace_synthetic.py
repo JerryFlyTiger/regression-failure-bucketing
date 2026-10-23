@@ -33,7 +33,7 @@ _LINES = [
     "6\t6\t80000300\t0062a023\tsw\tx6,0(x5)\tPA:0x8ffffffc store:0x000000aa\n",
     "7\t7\t80000304\t0072a023\tsw\tx7,0(x5)\tPA:0x12345678 store:0x000000bb\n",
     "8\t8\t80000308\t00000393\taddi\tx7,x0,7\tx7=0x00000007\n",
-    "9\t9\t8000030c\t008000ef\tjal\tx9,0x0\tx9=0x80000310\n",
+    "9\t9\t8000030c\t008004ef\tjal\tx9,0x0\tx9=0x80000310\n",
     "10\t10\t80000308\t04d00393\taddi\tx7,x0,77\tx7=0x0000004d\n",
     "11\t11\t80000400\n",  # malformed: not enough columns
 ]
@@ -121,7 +121,7 @@ def test_anchor_hits_second_occurrence_only(tmp_path):
 # via isa.check_safe).
 
 _CHECK_FAIL_LINES = [
-    "1\t1\t80000000\t00000013\taddi\tx1,x0,5\tx1=0x00000005\n",
+    "1\t1\t80000000\t00500093\taddi\tx1,x0,5\tx1=0x00000005\n",
     "2\t2\t80000004\t0020a1b3\tadd\tx3,x1,x2\tx1:0x00000005 x2:0x00000003 x3=0x000003e7\n",
     "3\t3\t80000008\t00000213\taddi\tx4,x0,1\tx4=0x00000001\n",
     "4\t4\t8000000c\t00000293\taddi\tx5,x0,1\tx5=0x00000001\n",
@@ -242,7 +242,7 @@ def test_c_addi4spn_own_write_does_not_affect_own_check(tmp_path):
     # ordering, the recompute still uses the *previous* shadow (0x100), so
     # 0x100+4=0x104 matches the real x8 write and no violation is raised.
     lines = [
-        "1\t1\t80000000\t00000013\taddi\tx2,x0,0x100\tx2=0x00000100\n",
+        "1\t1\t80000000\t10000113\taddi\tx2,x0,0x100\tx2=0x00000100\n",
         "2\t2\t80000004\t0000e013\tc.addi4spn\tx8,x2,4\tx8=0x00000104 x2=0x00000999\n",
         "3\t3\t80000008\t00000013\taddi\tx0,x0,0\tx0=0x00000000\n",
     ]
@@ -261,7 +261,7 @@ def test_c_addi4spn_stale_shadow_flagged_wrong_result(tmp_path):
     # bug that silently changed x2 without the tracer ever printing a
     # fresh read of it (docs/ARCHITECTURE.md 4.3 known-risk note).
     lines = [
-        "1\t1\t80000000\t00000013\taddi\tx2,x0,0x100\tx2=0x00000100\n",
+        "1\t1\t80000000\t10000113\taddi\tx2,x0,0x100\tx2=0x00000100\n",
         "2\t2\t80000004\t0000e013\tc.addi4spn\tx8,x2,4\tx8=0x00000999\n",
         "3\t3\t80000008\t00000013\taddi\tx0,x0,0\tx0=0x00000000\n",
     ]
@@ -343,7 +343,7 @@ def test_read_mismatch_counted_but_not_first_violation(tmp_path):
 def test_read_mismatch_does_not_shadow_later_first_violation(tmp_path):
     lines = _RM_LINES[:2] + [
         # jal at 0x80000008 whose next pc is not the target -> non-READ violation
-        "3\t3\t80000008\t008000ef\tjal\tx9,0x10\tx9=0x8000000c\n",
+        "3\t3\t80000008\t008004ef\tjal\tx9,0x10\tx9=0x8000000c\n",
         "4\t4\t80000100\t00000013\taddi\tx0,x0,0\tx0=0x00000000\n",
     ]
     path = _write_lines(tmp_path, lines, name="trace_rm2.log")

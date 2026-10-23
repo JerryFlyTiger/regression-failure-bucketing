@@ -113,9 +113,34 @@ def test_r1m_hits_split_uvm_vs_mismatch():
     assert _atom_distance(x, y) == D_VIOL
 
 
-def test_r1m_not_hit_when_unsplit():
-    x, y = _uvm(1, EV, EV, split=False), _mm(2)
+@pytest.mark.parametrize("family", ["FATAL", "ASSERT", "OTHER"])
+def test_r1m_hits_when_unsplit(family):
+    x, y = _uvm(1, EV, EV, split=False, family=family), _mm(2)
     assert x.split_of is None
+    assert _atom_distance(x, y) == D_VIOL
+
+
+def test_r1m_mismatch_family_atom_with_ev_sys_not_hit():
+    # On the real path a MISMATCH atom never carries ev_sys (signature._uvm_ev
+    # returns early for MISMATCH). This synthetic atom only pins the
+    # `x.family not in _UVM_FAMILIES` guard in cluster._ev_mismatch_link.
+    hk = ("MISMATCH", "LOAD_EXT", "LD_SEXT")
+    x = _Atom(hk, [_sig(1, "MISMATCH", hk, uvm_ev=EV, uvm_ev_sys=EV)])
+    assert x.ev_sys == frozenset({EV})
+    assert _atom_distance(x, _mm(2)) != D_VIOL
+    assert _atom_distance(_mm(2), x) != D_VIOL
+
+
+def test_r1m_unsplit_not_hit_when_ev_sys_empty():
+    x, y = _uvm(1, EV, "", split=False), _mm(2)
+    assert x.split_of is None and x.ev == frozenset({EV}) and x.ev_sys == frozenset()
+    assert _atom_distance(x, y) == D_CROSS
+
+
+def test_r1m_unsplit_not_hit_when_classes_disjoint():
+    x = _uvm(1, EV, EV, split=False)
+    y = _mm(2, vcls=frozenset({("LOAD_EXT", "LD_ZEXT")}))
+    assert x.split_of is None and x.ev_sys
     assert _atom_distance(x, y) == D_CROSS
 
 
@@ -160,6 +185,21 @@ def test_r1m_ev_sys_is_union_over_members(thick_first):
     assert x.ev_sys == frozenset({EV})
     assert _atom_distance(x, _mm(3)) == D_VIOL
     assert _atom_distance(_mm(3), x) == D_VIOL
+
+
+def test_r1m_matches_ev_sys_not_single_shot_ev():
+    # One member has EV only once (ev, not ev_sys); another has a different
+    # class systematically. The link must use ev_sys, not the wider ev.
+    # Synthetic: cluster()'s _split_conflicting splits such a group, so on the
+    # real path ev_sys == ev when non-empty; this pins against that loosening.
+    other = "LOAD_EXT:LD_ZEXT"
+    hk = ("FATAL", "m", EV)
+    thin = _sig(1, "FATAL", hk, uvm_ev=EV, uvm_ev_sys="")
+    thick = _sig(2, "FATAL", hk, uvm_ev=other, uvm_ev_sys=other)
+    x = _Atom(hk, [thin, thick])
+    assert x.ev == frozenset({EV, other}) and x.ev_sys == frozenset({other})
+    assert _atom_distance(x, _mm(3)) != D_VIOL
+    assert _atom_distance(_mm(3), x) != D_VIOL
 
 
 def test_r1m_beats_r2_assert_overlap():

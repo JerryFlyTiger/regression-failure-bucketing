@@ -229,14 +229,15 @@ def _alu_op_link(a: _Atom, b: _Atom) -> bool:
 
 
 def _ev_mismatch_link(x: _Atom, y: _Atom) -> bool:
-    """R1m: x is a UVM sub-atom split out by _split_conflicting (its message
-    is shown non-specific), and one of its systematic trace evidence classes
-    (``ev_sys``, ``"<kind>:<viol_group>"``) is a systematic class of the
-    MISMATCH atom y. Only the kinds kept out of ``sys_viol_class``
-    (``signature._SCAN_EXCLUDED``: READ_MISMATCH, LOAD_EXT, MEM_MISMATCH, CSR_MISMATCH,
-    TRAP_MCAUSE, TRAP_MEPC, TRAP_MTVAL)
-    ever get an ``ev_sys``, so R1m covers only what R1 cannot link. See docs/ARCHITECTURE.md 5.4."""
-    if x.split_of is None or not x.ev_sys or x.family not in _UVM_FAMILIES:
+    """R1m: x is a UVM atom with systematic trace evidence (``ev_sys``, split
+    out by _split_conflicting or not), and one of its evidence classes
+    (``"<kind>:<viol_group>"``) is a systematic class of the MISMATCH atom y.
+    R1 already links an unsplit UVM atom to MISMATCH through ``vcls``; only the
+    kinds kept out of ``sys_viol_class`` (``signature._SCAN_EXCLUDED``:
+    READ_MISMATCH, LOAD_EXT, MEM_MISMATCH, CSR_MISMATCH, TRAP_MCAUSE,
+    TRAP_MEPC, TRAP_MTVAL, MSTATUS_MISMATCH) were blocked, and only those
+    ever get an ``ev_sys``. See docs/ARCHITECTURE.md 5.4."""
+    if not x.ev_sys or x.family not in _UVM_FAMILIES:
         return False
     if y.family != "MISMATCH":
         return False
@@ -248,7 +249,7 @@ def _atom_distance(a: _Atom, b: _Atom) -> float:
     if a.vcls & b.vcls:
         return D_VIOL
 
-    # R1m: split UVM sub-atom's systematic evidence class is a systematic
+    # R1m: UVM atom's systematic evidence class is a systematic
     # class of a MISMATCH atom -> same strength as R1.
     if _ev_mismatch_link(a, b) or _ev_mismatch_link(b, a):
         return D_VIOL

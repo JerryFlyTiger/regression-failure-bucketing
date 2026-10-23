@@ -23,7 +23,7 @@ project, and has only been evaluated on the public sample benchmarks.
 - Development happens in the private repository. **The private version is
   ahead of this one.** Reviewed milestones are copied here as periodic
   snapshots.
-- The current snapshot corresponds to private commit `ee49270`.
+- The current snapshot corresponds to private commit `6872edb`.
 - Not included here:
   - The problem description, Q&A and leaderboards. See the official contest
     website.
@@ -43,7 +43,8 @@ trace.log ┘   (rfb/parse_*)   (rfb/isa, diverge)   (rfb/signature)  (rfb/clust
 - **Parse** the three logs as streams. Cases are processed in parallel.
 - **Re-check the retire trace against ISA semantics.** Branch conditions,
   ALU results, register reads against the last write, loads against a memory
-  shadow, CSR reads, and trap/xret targets. The histogram of violations over the whole trace acts
+  shadow, CSR reads (including predicted `mstatus` fields), trap/xret targets,
+  and decoder register fields against the printed operands. The histogram of violations over the whole trace acts
   as the bug's signature. The divergence point reported by the comparator is
   used as a precise anchor.
 - **Build a signature** per case: failure family (MISMATCH / FATAL / ASSERT),
@@ -126,7 +127,7 @@ Run the tests:
 ```
 
 Without the test data, the tests that read the public benchmarks fail
-(about 110 of 1109). The others still run. With the data in place, all
+(about 110 of 1426). The others still run. With the data in place, all
 tests pass.
 
 ## Repository layout

@@ -87,7 +87,7 @@ def _viol_class(trace) -> tuple | None:
 MIN_SYS_VIOL = 2
 # Kinds whose scan counts stay out of sys_viol_class/keys (only a deviation gets in).
 _SCAN_EXCLUDED = ("READ_MISMATCH", "LOAD_EXT", "MEM_MISMATCH", "CSR_MISMATCH",
-                  "TRAP_MCAUSE", "TRAP_MEPC", "TRAP_MTVAL")
+                  "TRAP_MCAUSE", "TRAP_MEPC", "TRAP_MTVAL", "MSTATUS_MISMATCH")
 
 
 def _sys_viol(record: FailureRecord) -> tuple[frozenset, frozenset]:
@@ -102,9 +102,11 @@ def _sys_viol(record: FailureRecord) -> tuple[frozenset, frozenset]:
         # READ_MISMATCH deviation (below) gets in.
         if n >= MIN_SYS_VIOL and key.split(":", 1)[0] not in _SCAN_EXCLUDED:
             kind, mnemonic = key.split(":", 1)
+            # 32-bit REG_ADDR keys end in "@RS1"/"@RS2"/"@RD" (parse_trace).
+            mnemonic, _, fld = mnemonic.partition("@")
             # 2026-09-28 ALU 覆蓋，依 out/arch_alu 實驗（方案 G）: see
             # docs/ARCHITECTURE.md 5.3.
-            cls.add((kind, isa_viol_group(kind, mnemonic)))
+            cls.add((kind, isa_viol_group(kind, mnemonic, {"field": fld} if fld else None)))
             keys.add((kind, mnemonic))
     dev = record.deviation
     if record.family == "MISMATCH" and dev is not None and dev.kind != "NONE":

@@ -50,8 +50,14 @@ class Instr:
     pa: int | None
     store: int | None
     load: int | None
+    # Raw Insn column (hex text), read only by isa REG_ADDR.  Not serialized:
+    # it is an input column, and FailureRecord JSON stays byte-identical.
+    insn: str = ""
 
-    to_dict = _dataclass_to_dict
+    def to_dict(self) -> dict:
+        d = _dataclass_to_dict(self)
+        del d["insn"]
+        return d
 
 
 @dataclass(slots=True)

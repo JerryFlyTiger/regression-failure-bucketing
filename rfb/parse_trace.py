@@ -46,6 +46,7 @@ _ANCHOR_AFTER = 4
 _MAX_SIG_WRITES = 16
 _SIG_ADDR = 0x8FFFFFFC
 _MAX_SAMPLES_PER_KEY = 3
+_RA_KINDS = ("REG_ADDR_RD", "REG_ADDR_RS")
 _MAX_CHECK_ERRORS = 8
 
 
@@ -336,6 +337,15 @@ def parse_trace(path: str, regr_info=None) -> TraceInfo:
             if not v.detail.get("nb"):
                 mem_all_nb = False
         key = f"{v.kind}:{v.mnemonic}"
+        if v.kind in _RA_KINDS and not v.mnemonic.startswith("c."):
+            # 32-bit REG_ADDR: carry the field (RS1/RS2/RD) so the scan-path
+            # sys_viol_class matches hard_key's viol_group (signature._sys_viol).
+            # The "RS" fallback is unreachable: isa._reg_addr always sets
+            # detail["field"] for 32-bit REG_ADDR (RD for REG_ADDR_RD).
+            key += "@" + (v.detail.get("field") or "RS")
+        elif v.kind == "MSTATUS_MISMATCH":
+            # The field keeps viol_vec (R4) apart for different mstatus fields.
+            key += "@" + (v.detail.get("field") or "?")
         violations[key] = violations.get(key, 0) + 1
         # READ_MISMATCH only becomes a deviation through the anchor window;
         # it must never be the first_violation fallback.
@@ -448,6 +458,7 @@ def parse_trace(path: str, regr_info=None) -> TraceInfo:
             pa=pa,
             store=store,
             load=load,
+            insn=insn_hex,
         )
 
         if pending_instr is not None:
@@ -467,6 +478,7 @@ def parse_trace(path: str, regr_info=None) -> TraceInfo:
                 ctx.mem.clear()
                 ctx.csr.clear()
                 ctx.csr_chain.clear()
+                ctx.mst_known = 0
                 ctx.mem_at.clear()
                 ctx.word_sub.clear()
                 ctx.regs.clear()

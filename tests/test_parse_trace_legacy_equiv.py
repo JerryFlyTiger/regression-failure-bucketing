@@ -22,6 +22,30 @@ from rfb import parse_trace as pt
 from rfb.record import Mismatch, RegrInfo
 from tests import _legacy_parse_trace as legacy
 
+@pytest.fixture(autouse=True)
+def _no_reg_addr(monkeypatch):
+    """REG_ADDR (isa._reg_addr) compares the printed registers with the Insn
+    bits.  The frozen legacy oracle builds Instr without the Insn column, so it
+    can never report REG_ADDR.  Unlike READ_MISMATCH it can be first_violation,
+    so stripping it from the result is not enough; turn it off on both sides.
+    This is more than a defensive opt-out (2026-10-18 R3-3 correction): the
+    fuzz has random next_pc, which looks like a trap after every instruction,
+    so REG_ADDR skips those, but the last line of a trace has next_pc None and
+    is still checked.  Of 3000 fuzz traces 14 (about 0.47%) fire on that last
+    line.  The 0.47% is per fuzz trace, not per seed: test_fuzz_random_traces
+    is one seed with 200 traces, so with the opt-out removed about two thirds
+    of seeds fail (27 of 40 measured); the fixed seed happens not to.
+    REG_ADDR through the same pipeline (in-memory vs streaming) is checked by
+    tests/test_reg_addr.py."""
+    monkeypatch.setattr(rfb_isa, "_RA_ON", False)
+
+
+def test_reg_addr_opt_out_is_active():
+    # The opt-out guards against failures that only appear with another seed;
+    # with the current seed removing the fixture turns no test red, so pin it.
+    assert rfb_isa._RA_ON is False
+
+
 _HEADER = "Time\tCycle\tPC\tInsn\tDecoded instruction\tRegister and memory contents"
 
 
